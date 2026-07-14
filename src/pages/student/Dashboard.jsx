@@ -4,6 +4,7 @@ import { useAuth } from '../../context/AuthContext';
 import { getMyEnrollments } from '../../services/courseService';
 import Button from '../../components/Button';
 import Loader from '../../components/Loader';
+import BannerCarousel from '../../components/BannerCarousel';
 import { useNavigate } from 'react-router-dom';
 
 const StudentDashboard = () => {
@@ -123,6 +124,9 @@ const StudentDashboard = () => {
           )}
         </div>
       </div>
+
+      {/* PROMOTIONAL BANNERS */}
+      <BannerCarousel />
 
       {/* 3. STATS CARDS */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">

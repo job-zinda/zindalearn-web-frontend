@@ -5,6 +5,7 @@ import { BookOpen, Users, DollarSign, TrendingUp, PlusCircle, Eye, Clock } from 
 import { toast } from 'react-hot-toast';
 import { useAuth } from '../../context/AuthContext';
 import { Link } from 'react-router-dom';
+import BannerCarousel from '../../components/BannerCarousel';
 
 const InstructorDashboard = () => {
   const { user } = useAuth();
@@ -92,6 +93,9 @@ const InstructorDashboard = () => {
         <h2 className="text-3xl font-bold text-slate-900 mb-2">Welcome back, {user?.name}</h2>
         <p className="text-slate-500 text-sm">Here's what's happening with your courses today</p>
       </div>
+
+      {/* PROMOTIONAL BANNERS */}
+      <BannerCarousel />
 
       {/* Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">

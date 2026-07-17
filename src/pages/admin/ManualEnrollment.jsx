@@ -104,8 +104,14 @@ const ManualEnrollment = () => {
       setSelectedCourse('');
       fetchHistory();
     } catch (error) {
-      const msg = error?.response?.data?.message || 'Failed to grant access';
-      toast.error(msg);
+      // A client-side timeout/network error doesn't mean the request failed on
+      // the server — refresh history so the table reflects reality either way.
+      if (error?.response) {
+        const msg = error.response.data?.message || 'Failed to grant access';
+        toast.error(msg);
+      } else {
+        fetchHistory();
+      }
     } finally {
       setGranting(false);
     }

@@ -9,7 +9,7 @@ const api = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
-  timeout: 15000, // 15 seconds timeout
+  timeout: 45000, // 45 seconds — Render free-tier cold starts can take 20-50s
 });
 
 // Add a request interceptor to include the auth token
@@ -34,9 +34,17 @@ api.interceptors.response.use(
 
     // Handle Network Errors (ERR_CONNECTION_REFUSED, etc.)
     if (!error.response) {
-      toast.error('Server is currently unavailable. Please check your connection.', {
-        id: 'network-error'
-      });
+      if (error.code === 'ECONNABORTED') {
+        // Request timed out client-side; the server (e.g. a cold-starting Render
+        // instance) may still be processing it and could complete anyway.
+        toast.error('The server is taking longer than usual to respond (it may be waking up). Please wait a moment and check if your action went through.', {
+          id: 'network-error'
+        });
+      } else {
+        toast.error('Server is currently unavailable. Please check your connection.', {
+          id: 'network-error'
+        });
+      }
       return Promise.reject(error);
     }
 

@@ -65,7 +65,7 @@ const CourseDetailsPage = () => {
   const handleEnrollClick = () => {
     if (!isAuthenticated) {
       toast.error('Please login to enroll in courses');
-      navigate('/login');
+      navigate('/login', { state: { from: `/courses/${id}` } });
       return;
     }
     setShowPurchaseModal(true);
@@ -79,7 +79,7 @@ const CourseDetailsPage = () => {
     
     try {
       // 1. If course is free, use direct enrollment
-      if (course.price === 0 || course.isFree) {
+      if (course.price === 0) {
         await enrollInCourse(course._id);
         toast.success('Successfully Enrolled!', { id: loadingToast });
         setShowPurchaseModal(false);
@@ -155,6 +155,10 @@ const CourseDetailsPage = () => {
       };
 
       const paymentObject = new window.Razorpay(options);
+      paymentObject.on('payment.failed', (response) => {
+        setEnrolling(false);
+        toast.error(response.error?.description || 'Payment failed. Please try again.', { id: loadingToast });
+      });
       paymentObject.open();
       
     } catch (err) {

@@ -49,7 +49,7 @@ const CourseCard = ({ course, enrolled = false }) => {
 
     if (!isAuthenticated) {
       toast.error('Please login to enroll in courses');
-      navigate('/login');
+      navigate('/login', { state: { from: `/courses/${_id}` } });
       return;
     }
     
@@ -129,6 +129,10 @@ const CourseCard = ({ course, enrolled = false }) => {
       };
 
       const rzp = new window.Razorpay(options);
+      rzp.on('payment.failed', (response) => {
+        setIsEnrolling(false);
+        toast.error(response.error?.description || 'Payment failed. Please try again.', { id: loadingToast });
+      });
       rzp.open();
 
     } catch (err) {
@@ -216,7 +220,7 @@ const CourseCard = ({ course, enrolled = false }) => {
                 size="sm" 
                 className="rounded-xl shadow-sm hover:shadow-md"
               >
-                {isEnrolling ? 'Enrolling...' : 'Enroll Now'}
+                {isEnrolling ? 'Processing...' : price === 0 ? 'Enroll for Free' : 'Pay & Enroll'}
               </Button>
             ) : (
               <Button 

@@ -35,7 +35,7 @@ const CourseSidebar = ({
       {/* Pricing & CTA */}
       <div className="p-6">
         <div className="flex items-baseline gap-3 mb-6">
-          {course.discountPrice > 0 ? (
+          {course.discountPrice > 0 && course.discountPrice < course.price ? (
             <>
               <span className="text-3xl font-bold text-gray-900">{formatCurrency(course.discountPrice)}</span>
               <span className="text-lg text-gray-500 line-through">{formatCurrency(course.price)}</span>
@@ -65,7 +65,7 @@ const CourseSidebar = ({
               onClick={onEnroll}
               className="w-full py-3.5 bg-purple-600 hover:bg-purple-700 disabled:bg-purple-300 text-white font-bold rounded-lg transition-colors"
             >
-              {enrolling ? 'Processing...' : 'Enroll Now'}
+              {enrolling ? 'Processing...' : course.price === 0 ? 'Enroll for Free' : 'Pay & Enroll'}
             </button>
           )}
         </div>

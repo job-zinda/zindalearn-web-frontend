@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Mail, Lock, User, GraduationCap, ArrowRight, Shield, CheckCircle2, AlertCircle, Loader2 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import Input from '../../components/Input';
@@ -18,6 +18,10 @@ const StudentRegister = () => {
   const [errors, setErrors] = useState({});
   const { register, googleLogin } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+  const courseReturnPath = typeof location.state?.from === 'string' && /^\/courses\/[^/?#]+$/.test(location.state.from)
+    ? location.state.from
+    : null;
 
   // OTP State
   const [otp, setOtp] = useState('');
@@ -122,7 +126,7 @@ const StudentRegister = () => {
     try {
       await register({ name: formData.name, email: formData.email, password: formData.password, role: 'student' });
       toast.success('Account created successfully!');
-      navigate('/student/dashboard');
+      navigate(courseReturnPath || '/student/dashboard');
     } catch (err) {
       toast.error(err.response?.data?.message || 'Registration failed');
     } finally {
@@ -153,7 +157,7 @@ const StudentRegister = () => {
       const token = await user.getIdToken();
       await googleLogin({ name: user.displayName, email: user.email, photo: user.photoURL, token });
       toast.success('Signed in with Google!');
-      navigate('/student/dashboard');
+      navigate(courseReturnPath || '/student/dashboard');
     } catch (err) {
       if (err.code !== 'auth/popup-closed-by-user') {
         const errorMsg = err.response?.data?.message || err.message || 'Google signup failed';
@@ -344,7 +348,7 @@ const StudentRegister = () => {
             </form>
 
             <p className="text-center text-sm text-surface-500 mt-6">
-              Already have an account? <Link to="/login" className="font-semibold text-primary-600 hover:text-primary-700">Sign In</Link>
+              Already have an account? <Link to="/login" state={courseReturnPath ? { from: courseReturnPath } : null} className="font-semibold text-primary-600 hover:text-primary-700">Sign In</Link>
             </p>
           </div>
         </div>

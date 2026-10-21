@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Mail, Lock, GraduationCap, ArrowRight, Star, Quote } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import Input from '../components/Input';
@@ -17,6 +17,10 @@ const StudentLogin = () => {
   const { login, googleLogin } = useAuth();
   const { stats, testimonials, loading: landingLoading } = useLandingData();
   const navigate = useNavigate();
+  const location = useLocation();
+  const courseReturnPath = typeof location.state?.from === 'string' && /^\/courses\/[^/?#]+$/.test(location.state.from)
+    ? location.state.from
+    : null;
 
   const validate = () => {
     const errs = {};
@@ -45,7 +49,7 @@ const StudentLogin = () => {
       } else if (data.user.role === 'instructor') {
         navigate('/instructor/dashboard');
       } else {
-        navigate('/student/dashboard');
+        navigate(courseReturnPath || '/student/dashboard');
       }
     } catch (err) {
       toast.error(err.response?.data?.message || 'Login failed');
@@ -83,7 +87,7 @@ const StudentLogin = () => {
       } else if (data.user.role === 'instructor') {
         navigate('/instructor/dashboard');
       } else {
-        navigate('/student/dashboard');
+        navigate(courseReturnPath || '/student/dashboard');
       }
     } catch (err) {
       if (err.code === 'auth/popup-closed-by-user') {
@@ -248,7 +252,7 @@ const StudentLogin = () => {
 
             <p className="text-center text-sm text-surface-500 mt-6">
               Don't have an account?{' '}
-              <Link to="/register" className="font-semibold text-primary-600 hover:text-primary-700">
+              <Link to="/register" state={courseReturnPath ? { from: courseReturnPath } : null} className="font-semibold text-primary-600 hover:text-primary-700">
                 Create Account
               </Link>
             </p>

@@ -16,7 +16,7 @@ const PurchaseModal = ({ isOpen, onClose, course, onProceed, loading }) => {
   // Close on ESC key
   useEffect(() => {
     const handleEsc = (e) => {
-      if (e.key === 'Escape') onClose();
+      if (e.key === 'Escape' && !loading) onClose();
     };
     if (isOpen) {
       window.addEventListener('keydown', handleEsc);
@@ -26,11 +26,14 @@ const PurchaseModal = ({ isOpen, onClose, course, onProceed, loading }) => {
       window.removeEventListener('keydown', handleEsc);
       document.body.style.overflow = 'unset';
     };
-  }, [isOpen, onClose]);
+  }, [isOpen, onClose, loading]);
 
   const price = course?.price || 0;
   const discountPrice = course?.discountPrice || 0;
   const totalAmount = discountPrice > 0 && discountPrice < price ? discountPrice : price;
+  const closeModal = () => {
+    if (!loading) onClose();
+  };
 
   const handleProceed = () => {
     if (!agreed) {
@@ -43,14 +46,14 @@ const PurchaseModal = ({ isOpen, onClose, course, onProceed, loading }) => {
   const modalContent = (
     <AnimatePresence mode="wait">
       {isOpen && (
-        <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4">
+        <div onClick={(e) => e.stopPropagation()} className="fixed inset-0 z-[60] flex items-start justify-center overflow-y-auto p-4">
           {/* Backdrop overlay */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            onClick={onClose}
-            className="absolute inset-0 bg-zinc-900/60 backdrop-blur-sm"
+            onClick={closeModal}
+            className="fixed inset-0 bg-zinc-900/60 backdrop-blur-sm"
           />
 
           {/* Modal Content */}
@@ -59,12 +62,17 @@ const PurchaseModal = ({ isOpen, onClose, course, onProceed, loading }) => {
             animate={{ scale: 1, opacity: 1, y: 0 }}
             exit={{ scale: 0.95, opacity: 0, y: 20 }}
             transition={{ type: "spring", damping: 25, stiffness: 300 }}
-            className="relative w-full max-w-lg bg-white rounded-[2.5rem] shadow-2xl overflow-hidden"
+            role="dialog"
+            aria-modal="true"
+            aria-label={totalAmount === 0 ? 'Free enrollment' : 'Course payment'}
+            className="relative my-auto w-full max-w-lg bg-white rounded-[2.5rem] shadow-2xl overflow-hidden"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Close Button */}
             <button
-              onClick={onClose}
+              onClick={closeModal}
+              disabled={loading}
+              aria-label="Close checkout"
               className="absolute top-6 right-6 p-2 rounded-full bg-zinc-100 text-zinc-400 hover:text-zinc-600 hover:bg-zinc-200 transition-all z-10"
             >
               <X className="w-5 h-5" />
@@ -115,7 +123,7 @@ const PurchaseModal = ({ isOpen, onClose, course, onProceed, loading }) => {
                       </span>
                     )}
                     <span className="text-lg font-black text-zinc-900">
-                      {formatCurrency(discountPrice > 0 && discountPrice < price ? price : price)}
+                      {formatCurrency(price)}
                     </span>
                   </div>
                 </div>
@@ -142,7 +150,7 @@ const PurchaseModal = ({ isOpen, onClose, course, onProceed, loading }) => {
               <div className="flex items-center gap-3 mb-8 p-4 bg-primary-50/50 rounded-2xl border border-primary-100">
                 <ShieldCheck className="w-5 h-5 text-primary-600 shrink-0" />
                 <p className="text-sm font-bold text-primary-900">
-                  You are about to purchase this course.
+                  {totalAmount === 0 ? 'Enroll in this course for free.' : 'Pay securely with Razorpay to enroll in this course.'}
                 </p>
               </div>
 
@@ -154,6 +162,7 @@ const PurchaseModal = ({ isOpen, onClose, course, onProceed, loading }) => {
                       type="checkbox"
                       checked={agreed}
                       onChange={(e) => setAgreed(e.target.checked)}
+                      disabled={loading}
                       className="sr-only peer"
                     />
                     <div className="w-5 h-5 border-2 border-zinc-200 rounded-md peer-checked:bg-primary-600 peer-checked:border-primary-600 transition-all flex items-center justify-center">
@@ -161,7 +170,7 @@ const PurchaseModal = ({ isOpen, onClose, course, onProceed, loading }) => {
                     </div>
                   </div>
                   <span className="text-sm font-bold text-zinc-500 group-hover:text-zinc-700 transition-colors">
-                    I agree to the <button type="button" className="text-primary-600 underline hover:text-primary-700 transition-colors">Terms & Conditions</button>
+                    I agree to the <a href="/terms-of-service" target="_blank" rel="noopener noreferrer" className="text-primary-600 underline hover:text-primary-700 transition-colors">Terms & Conditions</a>
                   </span>
                 </label>
 
@@ -169,7 +178,7 @@ const PurchaseModal = ({ isOpen, onClose, course, onProceed, loading }) => {
                 <div className="flex gap-4">
                   <button
                     type="button"
-                    onClick={onClose}
+                    onClick={closeModal}
                     disabled={loading}
                     className="flex-1 py-4 bg-zinc-100 hover:bg-zinc-200 text-zinc-600 font-black text-sm rounded-2xl transition-all disabled:opacity-50"
                   >
@@ -178,7 +187,7 @@ const PurchaseModal = ({ isOpen, onClose, course, onProceed, loading }) => {
                   <button
                     type="button"
                     onClick={handleProceed}
-                    disabled={loading}
+                    disabled={loading || !agreed}
                     className={`flex-1 py-4 flex items-center justify-center gap-2 font-black text-sm rounded-2xl shadow-lg transition-all ${
                       agreed && !loading
                         ? 'bg-primary-600 text-white shadow-primary-500/30 hover:bg-primary-700 hover:scale-[1.02] active:scale-[0.98]' 
@@ -191,7 +200,7 @@ const PurchaseModal = ({ isOpen, onClose, course, onProceed, loading }) => {
                         Initializing...
                       </>
                     ) : (
-                      'Proceed to Payment'
+                      totalAmount === 0 ? 'Enroll for Free' : `Pay ${formatCurrency(totalAmount)} & Enroll`
                     )}
                   </button>
                 </div>

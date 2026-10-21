@@ -41,8 +41,8 @@ const CreateModuleModal = ({ onClose, onSave, initialData }) => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
-      <div className="bg-white rounded-[32px] w-full max-w-lg shadow-2xl animate-scale-in overflow-hidden">
+    <div className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-black/40 backdrop-blur-sm p-4">
+      <div className="my-auto bg-white rounded-[32px] w-full max-w-lg shadow-2xl animate-scale-in overflow-hidden">
         <div className="flex items-center justify-between p-8 pb-6 border-b border-slate-50">
           <h3 className="text-xl font-bold text-slate-900">Add New Section</h3>
           <button onClick={onClose} className="w-10 h-10 flex items-center justify-center rounded-full bg-slate-50 hover:bg-slate-100 transition-colors">
@@ -182,8 +182,8 @@ const CreateCouponModal = ({ onClose }) => {
 // ── Create Lesson Modal ───────────────────────────────────────────────────────
 const CreateLessonModal = ({ onClose, onSave, courseId }) => {
   return (
-    <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
-      <div className="w-full max-w-2xl animate-scale-in">
+    <div className="fixed inset-0 z-[60] flex items-start justify-center overflow-y-auto bg-black/40 backdrop-blur-sm px-4 pt-16 pb-8">
+      <div className="my-auto w-full max-w-2xl animate-scale-in">
         <div className="relative">
           <button
             onClick={onClose}
@@ -1413,7 +1413,7 @@ const CourseDetail = () => {
   }
 
   return (
-    <div className="animate-fade-in pb-20">
+    <div className={`animate-fade-in pb-20 ${isAdmin ? 'bg-slate-50 text-slate-900 rounded-2xl p-4 sm:p-6' : ''}`}>
       {/* Breadcrumb */}
       <div className="flex items-center gap-2 text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-8">
         <Link to={isAdmin ? '/admin/courses' : '/instructor/my-courses'} className="hover:text-purple-600 transition-colors">Courses</Link>
@@ -1425,7 +1425,7 @@ const CourseDetail = () => {
       <div className="flex flex-col xl:flex-row justify-between items-start xl:items-center gap-6 mb-10">
         <div>
           <h1 className="text-4xl font-bold text-slate-900 mb-2 tracking-tight">{course.title}</h1>
-          <p className="text-base text-slate-500">Course Management & Curriculum</p>
+          <p className="text-base text-slate-500">Add sections, lessons, videos, and resources below. Publish when your course is ready.</p>
         </div>
 
         <div className="flex flex-wrap items-center gap-4">

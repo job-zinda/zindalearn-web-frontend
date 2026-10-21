@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import {
   BookOpen, CheckCircle, Clock, Users, Search,
-  Eye, Trash2, Ban, Star, Lock, Unlock
+  Plus, Trash2, Ban, Star, Lock, Unlock
 } from 'lucide-react';
 import {
   getAllCourses, approveCourse, updateCourseStatus, deleteCourse,
@@ -135,7 +135,12 @@ const CoursesManagement = () => {
             />
           </div>
           <div>
-            <p className="text-sm font-medium text-slate-200 line-clamp-1 max-w-[200px]">{course.title}</p>
+            <Link
+              to={`/admin/courses/${course._id}`}
+              className="block text-sm font-medium text-slate-200 hover:text-indigo-400 line-clamp-1 max-w-[200px]"
+            >
+              {course.title}
+            </Link>
             <p className="text-xs text-slate-500">{formatCategory(course.category)}</p>
           </div>
         </div>
@@ -209,11 +214,12 @@ const CoursesManagement = () => {
           )}
           <Link
             to={`/admin/courses/${course._id}`}
-            className="p-1.5 hover:bg-slate-700 rounded-lg text-indigo-400 transition-colors"
-            title="Manage course"
-            aria-label={`Manage ${course.title}`}
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold text-indigo-300 bg-indigo-500/10 hover:bg-indigo-500/20 whitespace-nowrap"
+            title="Add sections, lessons, videos, and resources"
+            aria-label={`Add Content to ${course.title}`}
           >
-            <Eye className="w-3.5 h-3.5" />
+            <Plus className="w-3.5 h-3.5" />
+            Add Content
           </Link>
           <button
             onClick={() => handleBlockToggle(course)}
@@ -236,7 +242,7 @@ const CoursesManagement = () => {
 
   return (
     <div className="space-y-6 animate-fade-in">
-      <PageHeader title="Courses" subtitle="New courses are saved as drafts. Add your content, then publish when ready." />
+      <PageHeader title="Courses" subtitle="New courses are saved as drafts. Use Add Content to add sections and lessons, then publish when ready." />
 
       {/* Stats */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">

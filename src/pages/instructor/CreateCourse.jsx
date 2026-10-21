@@ -71,14 +71,19 @@ const CreateCourse = () => {
 
     try {
       setLoading(true);
-      await createCourse({
+      const result = await createCourse({
         ...formData,
         price: Number(formData.price),
         discountPrice: Number(formData.discountPrice || 0),
         category: formData.category.toLowerCase()
       });
-      toast.success('Course saved as a draft. Add content and publish it from Manage Courses.');
-      navigate('/admin/courses');
+      if (!result.course?._id) {
+        toast.error('The course was created, but the content editor could not be opened. Open it from Manage Courses.');
+        navigate('/admin/courses');
+        return;
+      }
+      toast.success('Course saved as a draft. Add your sections and lessons below.');
+      navigate(`/admin/courses/${result.course._id}`);
     } catch (error) {
       toast.error(error.response?.data?.message || 'Failed to create course');
     } finally {
@@ -91,7 +96,7 @@ const CreateCourse = () => {
       <div className="mb-10">
         <h1 className={`text-4xl font-bold mb-2 tracking-tight ${isAdmin ? 'text-slate-100' : 'text-slate-900'}`}>Create Course</h1>
         <p className={`${isAdmin ? 'text-slate-400' : 'text-slate-500'} text-base`}>
-          Every great course starts with a solid foundation. Fill in the details below to bring your expertise to life.
+          Fill in the course details first. Next, add sections, lessons, and videos in the content editor before publishing.
         </p>
       </div>
 

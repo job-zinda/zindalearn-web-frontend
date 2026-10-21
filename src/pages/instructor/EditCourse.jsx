@@ -46,6 +46,14 @@ const EditCourse = () => {
     fetchCourseDetails();
   }, [id]);
 
+  useEffect(() => {
+    if (!loading && location.hash === '#referralCommissionPercent') {
+      const input = document.getElementById('referralCommissionPercent');
+      input?.scrollIntoView({ block: 'center', behavior: 'instant' });
+      input?.focus({ preventScroll: true });
+    }
+  }, [loading, location.hash]);
+
   const fetchCourseDetails = async () => {
     try {
       const data = await getCourseById(id);
@@ -157,6 +165,20 @@ const EditCourse = () => {
         <p className={`${isAdmin ? 'text-slate-400' : 'text-slate-500'} text-base`}>
           Update your course details and maintain your learning experience.
         </p>
+        {user?.role === 'admin' && (
+          <a
+            href="#referralCommissionPercent"
+            onClick={(event) => {
+              event.preventDefault();
+              const input = document.getElementById('referralCommissionPercent');
+              input?.scrollIntoView({ block: 'center', behavior: 'instant' });
+              input?.focus({ preventScroll: true });
+            }}
+            className="inline-block mt-4 font-semibold text-indigo-400 hover:text-indigo-300 underline underline-offset-4"
+          >
+            Set Referral Commission (%)
+          </a>
+        )}
       </div>
 
       <form onSubmit={handleSubmit} className="max-w-4xl space-y-8">

@@ -1473,7 +1473,7 @@ const CourseDetail = () => {
               className="flex items-center gap-2.5 px-6 py-3.5 bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 font-bold rounded-2xl transition-all active:scale-95 group"
             >
               <Edit2 className="w-4 h-4 group-hover:rotate-12 transition-transform" />
-              Edit Info
+              {isAdmin ? 'Edit Pricing & Referral' : 'Edit Info'}
             </button>
           )}
 

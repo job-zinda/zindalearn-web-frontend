@@ -142,6 +142,13 @@ const CoursesManagement = () => {
               {course.title}
             </Link>
             <p className="text-xs text-slate-500">{formatCategory(course.category)}</p>
+            <Link
+              to={`/admin/edit-course/${course._id}#referralCommissionPercent`}
+              className="inline-block mt-1 text-xs font-semibold text-indigo-300 hover:text-indigo-200 underline underline-offset-2"
+              aria-label={`Set referral commission for ${course.title}`}
+            >
+              Referral Commission: {course.referralCommissionPercent || 0}% · Edit
+            </Link>
           </div>
         </div>
       )
@@ -242,7 +249,7 @@ const CoursesManagement = () => {
 
   return (
     <div className="space-y-6 animate-fade-in">
-      <PageHeader title="Courses" subtitle="New courses are saved as drafts. Use Add Content to add sections and lessons, then publish when ready." />
+      <PageHeader title="Courses" subtitle="Set Referral Commission below each course title. Use Add Content for lessons, then publish when ready." />
 
       {/* Stats */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">

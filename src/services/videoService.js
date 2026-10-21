@@ -23,7 +23,7 @@ export const videoService = {
   },
 
   /**
-   * Upload video to backend proxy which then uploads to Cloudinary
+   * Upload through the backend, which selects Bunny Stream or Cloudinary.
    */
   uploadVideo: async (file, courseId, onProgress) => {
     const formData = new FormData();

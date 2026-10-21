@@ -42,30 +42,36 @@ const VideoUpload = ({ courseId, onUploadSuccess }) => {
 
     try {
       setUploading(true);
-      let finalVideoUrl = videoData.videoUrl;
-      let publicId = null;
+      let metadata = {
+        ...videoData,
+        courseId,
+        order: 0
+      };
 
       if (videoData.source === 'upload') {
-        // 1. Upload to Backend (Proxy to Cloudinary)
         const uploadResponse = await videoService.uploadVideo(file, courseId, (percent) => {
           setProgress(percent);
         });
 
-        finalVideoUrl = uploadResponse.url;
-        publicId = uploadResponse.publicId;
-        if (uploadResponse.duration) {
-          // You might want to update videoData with duration if needed
+        if (!uploadResponse.url ||
+            !['upload', 'bunny'].includes(uploadResponse.source) ||
+            (uploadResponse.source === 'upload' && !uploadResponse.publicId) ||
+            (uploadResponse.source === 'bunny' && (!uploadResponse.bunnyVideoId || !uploadResponse.hlsUrl))) {
+          throw new Error('The upload response is missing video storage details. Please retry the upload.');
         }
+
+        metadata = {
+          ...metadata,
+          source: uploadResponse.source,
+          videoUrl: uploadResponse.url,
+          publicId: uploadResponse.publicId,
+          bunnyVideoId: uploadResponse.bunnyVideoId,
+          hlsUrl: uploadResponse.hlsUrl,
+          duration: uploadResponse.duration || 0
+        };
       }
 
-      // 3. Save metadata
-      const response = await videoService.saveVideoMetadata({
-        ...videoData,
-        videoUrl: finalVideoUrl,
-        courseId,
-        publicId,
-        order: 0 // Default order
-      });
+      const response = await videoService.saveVideoMetadata(metadata);
 
       toast.success('Video uploaded successfully!');
       if (onUploadSuccess) onUploadSuccess(response.video);
@@ -76,7 +82,7 @@ const VideoUpload = ({ courseId, onUploadSuccess }) => {
       setVideoData({ title: '', description: '', source: 'upload', videoUrl: '' });
     } catch (error) {
       console.error('Upload error:', error);
-      toast.error(error.response?.data?.message || 'Upload failed');
+      toast.error(error.response?.data?.message || error.message || 'Upload failed');
     } finally {
       setUploading(false);
     }

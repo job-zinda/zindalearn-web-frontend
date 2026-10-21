@@ -200,7 +200,9 @@ const CreateLessonModal = ({ onClose, onSave, courseId }) => {
                 videoUrl: video.videoUrl,
                 duration: video.duration || 0,
                 isFree: false,
-                source: video.source
+                source: video.source,
+                bunnyVideoId: video.bunnyVideoId,
+                hlsUrl: video.hlsUrl
               });
               onClose();
             }}

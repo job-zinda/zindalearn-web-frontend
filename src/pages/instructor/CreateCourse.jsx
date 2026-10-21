@@ -61,8 +61,8 @@ const CreateCourse = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (loading) return;
-    if (user?.role !== 'admin' && !user?.isApproved) {
-      return toast.error('You must be approved by an admin to create courses');
+    if (user?.role !== 'admin') {
+      return toast.error('Only administrators can create courses');
     }
 
     if (!validateForm()) {
@@ -78,7 +78,7 @@ const CreateCourse = () => {
         category: formData.category.toLowerCase()
       });
       toast.success('Course created successfully!');
-      navigate(isAdmin ? '/admin/courses' : '/instructor/my-courses');
+      navigate('/admin/courses');
     } catch (error) {
       toast.error(error.response?.data?.message || 'Failed to create course');
     } finally {
@@ -343,7 +343,7 @@ const CreateCourse = () => {
           <div className="flex items-center gap-4 w-full sm:w-auto">
             <button 
               type="button"
-              onClick={() => navigate(isAdmin ? '/admin/courses' : '/instructor/my-courses')}
+              onClick={() => navigate('/admin/courses')}
               className={isAdmin 
                 ? "flex-1 sm:flex-none px-8 py-4 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold rounded-2xl border border-slate-700 transition-all"
                 : "flex-1 sm:flex-none px-8 py-4 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-2xl transition-all"

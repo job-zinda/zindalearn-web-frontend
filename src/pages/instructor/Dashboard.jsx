@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { getInstructorCourses, getInstructorStats } from '../../services/instructorService';
 import { formatCurrency } from '../../utils/currencyFormatter';
-import { BookOpen, Users, DollarSign, TrendingUp, PlusCircle, Eye, Clock } from 'lucide-react';
+import { BookOpen, Users, DollarSign, TrendingUp, Eye, Clock } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 import { useAuth } from '../../context/AuthContext';
 import { Link } from 'react-router-dom';
@@ -68,7 +68,7 @@ const InstructorDashboard = () => {
         </div>
         <h2 className="text-3xl font-bold text-slate-900 mb-2">Waiting for Admin Approval</h2>
         <p className="text-slate-500 max-w-md">
-          Your instructor account is currently under review. You'll be able to create and manage courses once an administrator approves your profile.
+          Your instructor account is under review. Course creation is currently handled by administrators; instructor tools will be available later.
         </p>
         <button 
           onClick={() => window.location.reload()}
@@ -147,8 +147,7 @@ const InstructorDashboard = () => {
             ) : (
               <div className="bg-white p-8 rounded-2xl border border-slate-100 text-center">
                 <BookOpen className="w-12 h-12 text-slate-200 mx-auto mb-4" />
-                <p className="text-sm text-slate-500">No courses created yet.</p>
-                <Link to="/instructor/create-course" className="text-sm font-bold text-purple-600 mt-2 block">Create your first course &rarr;</Link>
+                <p className="text-sm text-slate-500">Courses added by administrators will appear here.</p>
               </div>
             )}
           </div>
@@ -162,10 +161,6 @@ const InstructorDashboard = () => {
           <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
             <h3 className="text-xs font-bold text-purple-600 uppercase tracking-widest mb-4">QUICK ACTIONS</h3>
             <div className="space-y-3">
-              <Link to="/instructor/create-course" className="w-full flex items-center justify-between p-4 bg-purple-600 hover:bg-purple-700 text-white rounded-xl transition-colors font-bold text-sm shadow-md shadow-purple-200">
-                <span className="flex items-center gap-2"><PlusCircle className="w-5 h-5" /> Create Course</span>
-                <span className="text-lg leading-none">&rsaquo;</span>
-              </Link>
               <Link to="/instructor/my-courses" className="w-full flex items-center justify-between p-4 bg-purple-50 hover:bg-purple-100 text-purple-700 rounded-xl transition-colors font-bold text-sm">
                 <span className="flex items-center gap-2"><Eye className="w-5 h-5" /> View Courses</span>
                 <span className="text-lg leading-none">&rsaquo;</span>

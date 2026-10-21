@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { Link, useLocation, useNavigate, Outlet } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import {
-  LayoutDashboard, BookOpen, PlusCircle, Settings, LogOut, Menu, X,
+  LayoutDashboard, BookOpen, Settings, LogOut, Menu, X,
   ChevronDown, Users, CreditCard, Star, MessageSquare, HelpCircle, Video, LifeBuoy, Bell
 } from 'lucide-react';
 import NotificationBell from '../components/NotificationBell';
@@ -73,8 +73,8 @@ const InstructorLayout = () => {
         {/* Menu */}
         <nav className="flex-1 px-4 py-6 space-y-1 overflow-y-auto">
           {instructorMenuItems.map((item) => {
-            const isActive = location.pathname.includes(item.path) || 
-              (item.label === 'Courses' && (location.pathname.includes('/instructor/courses') || location.pathname.includes('/instructor/create-course')));
+            const isActive = location.pathname.includes(item.path) ||
+              (item.label === 'Courses' && location.pathname.includes('/instructor/courses'));
             return (
               <Link
                 key={item.label}
@@ -95,13 +95,6 @@ const InstructorLayout = () => {
 
         {/* Bottom Actions */}
         <div className="p-6 space-y-4">
-          <Link
-            to="/instructor/create-course"
-            className="flex items-center justify-center gap-2 w-full py-3 bg-purple-600 hover:bg-purple-500 text-white rounded-xl text-sm font-bold shadow-lg shadow-purple-900/20 transition-colors"
-          >
-            <PlusCircle className="w-5 h-5" />
-            Create Course
-          </Link>
           <Link
             to="/instructor/help"
             className="flex items-center gap-3 text-indigo-300 hover:text-white px-2 py-2 text-sm font-medium transition-colors"

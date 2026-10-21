@@ -4,7 +4,6 @@ import {
   Users,
   Search,
   ChevronDown,
-  Plus,
   ArrowRight,
   BookOpen,
   Trash2,
@@ -14,7 +13,7 @@ import {
   ChevronRight
 } from 'lucide-react';
 import { toast } from 'react-hot-toast';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { formatCurrency } from '../../utils/currencyFormatter';
 
 const MyCourses = () => {
@@ -32,7 +31,6 @@ const MyCourses = () => {
 
   const [deleteModal, setDeleteModal] = useState({ isOpen: false, courseId: null, courseTitle: '' });
   const [deleting, setDeleting] = useState(false);
-  const navigate = useNavigate();
 
   // Fetch courses when page, tab, search or sort changes
   useEffect(() => {
@@ -104,13 +102,6 @@ const MyCourses = () => {
           <h1 className="text-3xl font-bold text-slate-900">My Courses</h1>
           <p className="text-slate-500 mt-1">Manage and track all your courses</p>
         </div>
-        <button
-          onClick={() => navigate('/instructor/create-course')}
-          className="flex items-center gap-2 px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white font-bold rounded-2xl shadow-lg shadow-purple-200 transition-all active:scale-95"
-        >
-          <Plus className="w-5 h-5" />
-          Create Course
-        </button>
       </div>
 
       {/* Filter Bar */}
@@ -252,17 +243,8 @@ const MyCourses = () => {
                 </div>
                 <h3 className="text-xl font-bold text-slate-900 mb-2">No courses found</h3>
                 <p className="text-slate-500 max-w-xs mx-auto">
-                  {searchTerm ? `We couldn't find any courses matching "${searchTerm}"` : "You haven't created any courses yet."}
+                  {searchTerm ? `We couldn't find any courses matching "${searchTerm}"` : 'Courses added by administrators will appear here.'}
                 </p>
-                {!searchTerm && (
-                  <button
-                    onClick={() => navigate('/instructor/create-course')}
-                    className="mt-8 flex items-center gap-2 px-6 py-3 bg-purple-600 text-white font-bold rounded-2xl hover:bg-purple-700 transition-all"
-                  >
-                    <Plus className="w-5 h-5" />
-                    Create Your First Course
-                  </button>
-                )}
               </div>
             )}
 

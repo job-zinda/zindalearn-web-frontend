@@ -115,6 +115,10 @@ function AppContent() {
             <Route path="/register" element={<StudentRegister />} />
             <Route path="/instructor/login" element={<InstructorComingSoon />} />
             <Route path="/instructor/signup" element={<InstructorComingSoon />} />
+            <Route
+              path="/instructor/create-course"
+              element={<ProtectedRoute roles={['admin']}><Navigate to="/admin/create-course" replace /></ProtectedRoute>}
+            />
             <Route path="/admin/login" element={<AdminLogin />} />
             <Route path="/courses" element={<CoursesPage />} />
             <Route path="/about" element={<AboutPage />} />
@@ -155,7 +159,6 @@ function AppContent() {
               <Route path="my-courses" element={<MyCourses />} />
               <Route path="courses/:id" element={<CourseDetail />} />
               <Route path="edit-course/:id" element={<EditCourse />} />
-              <Route path="create-course" element={<CreateCourse />} />
               <Route path="earnings" element={<InstructorPayouts />} />
               <Route path="students" element={<Students />} />
               <Route path="reviews" element={<InstructorReviews />} />

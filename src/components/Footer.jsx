@@ -75,15 +75,15 @@ const Footer = () => {
             <ul className="space-y-4">
               <li className="flex items-center gap-3 text-sm text-surface-400">
                 <Mail className="w-4 h-4 text-primary-400 shrink-0" />
-                support@zindalearn.com
+                jobzinda@gmail.com
               </li>
               <li className="flex items-center gap-3 text-sm text-surface-400">
                 <Phone className="w-4 h-4 text-primary-400 shrink-0" />
-                +91 85906 98873
+                +91 98475 61998
               </li>
               <li className="flex items-start gap-3 text-sm text-surface-400">
                 <MapPin className="w-4 h-4 text-primary-400 shrink-0 mt-0.5" />
-                Tech Park, Palakkad, Kerala, India
+                Mannarkkad, Kerala, India
               </li>
             </ul>
           </div>

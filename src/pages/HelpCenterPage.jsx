@@ -164,13 +164,13 @@ const HelpCenterPage = () => (
         </div>
         <div className="flex flex-col sm:flex-row gap-3 flex-shrink-0">
           <a
-            href="mailto:support@zindalearn.com"
+            href="mailto:jobzinda@gmail.com"
             className="inline-flex items-center gap-2 px-5 py-2.5 bg-primary-600 text-white text-sm font-semibold rounded-xl hover:bg-primary-700 transition-colors"
           >
             <Mail size={15} /> Email Support
           </a>
           <a
-            href="tel:+918590698873"
+            href="tel:+919847561998"
             className="inline-flex items-center gap-2 px-5 py-2.5 bg-surface-800 text-white text-sm font-semibold rounded-xl hover:bg-surface-700 transition-colors"
           >
             <Phone size={15} /> Call Us
@@ -182,8 +182,8 @@ const HelpCenterPage = () => (
       <div className="flex flex-wrap items-center gap-6 mt-6 text-sm text-surface-500">
         {[
           { icon: Clock, label: 'Avg. response time: 4 hours' },
-          { icon: Mail, label: 'support@zindalearn.com' },
-          { icon: Phone, label: '+91 85906 98873' },
+          { icon: Mail, label: 'jobzinda@gmail.com' },
+          { icon: Phone, label: '+91 98475 61998' },
         ].map((item) => (
           <div key={item.label} className="flex items-center gap-2">
             <item.icon size={14} className="text-primary-500" />

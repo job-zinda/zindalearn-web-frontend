@@ -19,7 +19,7 @@ We reserve the right to update these terms at any time. Continued use of the pla
 
 - Provide accurate, current, and complete information during registration
 - Maintain the security of your password and account credentials
-- Notify us immediately at support@zindalearn.com of any unauthorized access
+- Notify us immediately at jobzinda@gmail.com of any unauthorized access
 - Take responsibility for all activities that occur under your account
 
 You may not create accounts for fraudulent purposes, impersonate other individuals, or use automated methods to register accounts.`,
@@ -91,7 +91,7 @@ Our total liability to you for any claim shall not exceed the amount you paid to
   {
     id: 'termination',
     title: '9. Termination',
-    content: `You may terminate your account at any time by contacting support@zindalearn.com or through your account settings.
+    content: `You may terminate your account at any time by contacting jobzinda@gmail.com or through your account settings.
 
 We reserve the right to suspend or terminate your account at our discretion if you violate these terms. In the event of termination for cause, no refunds will be issued.
 
@@ -102,7 +102,7 @@ Provisions of these terms that by their nature should survive termination (intel
     title: '10. Governing Law',
     content: `These Terms of Service are governed by the laws of India. Any disputes arising from these terms or your use of the platform shall be subject to the exclusive jurisdiction of the courts of Palakkad, Kerala, India.
 
-If you have any questions about these terms, contact us at support@zindalearn.com.`,
+If you have any questions about these terms, contact us at jobzinda@gmail.com.`,
   },
 ];
 

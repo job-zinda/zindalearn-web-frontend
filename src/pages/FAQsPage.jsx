@@ -63,7 +63,7 @@ const FAQS = [
       },
       {
         q: 'Do you offer student or group discounts?',
-        a: "We periodically run promotions. For bulk or institutional purchases (10+ seats), contact us at support@zindalearn.com for a custom quote.",
+        a: "We periodically run promotions. For bulk or institutional purchases (10+ seats), contact us at jobzinda@gmail.com for a custom quote.",
       },
     ],
   },
@@ -130,7 +130,7 @@ const FAQsPage = () => {
           </h1>
           <p className="text-surface-400 text-sm leading-relaxed">
             Quick answers to the questions we hear most often. Can't find what you need?{' '}
-            <a href="mailto:support@zindalearn.com" className="text-primary-400 hover:underline">
+            <a href="mailto:jobzinda@gmail.com" className="text-primary-400 hover:underline">
               Email our team.
             </a>
           </p>
@@ -170,7 +170,7 @@ const FAQsPage = () => {
             Our support team is happy to help. Reach out and we'll get back to you within a few hours.
           </p>
           <a
-            href="mailto:support@zindalearn.com"
+            href="mailto:jobzinda@gmail.com"
             className="inline-flex items-center gap-2 px-5 py-2.5 bg-primary-600 text-white text-sm font-semibold rounded-xl hover:bg-primary-700 transition-colors"
           >
             Contact Support

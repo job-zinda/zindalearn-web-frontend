@@ -73,9 +73,9 @@ Course completion records and certificates may be retained for verification purp
 - **Correct** inaccurate or incomplete data via your account settings
 - **Delete** your account and associated personal data
 - **Withdraw consent** for optional data processing at any time
-- **Export** a copy of your data by contacting support@zindalearn.com
+- **Export** a copy of your data by contacting jobzinda@gmail.com
 
-To exercise any of these rights, email us at support@zindalearn.com. We will respond within 30 days.`,
+To exercise any of these rights, email us at jobzinda@gmail.com. We will respond within 30 days.`,
   },
   {
     id: 'security',
@@ -84,7 +84,7 @@ To exercise any of these rights, email us at support@zindalearn.com. We will res
 
 No system is completely secure. While we work hard to protect your data, we cannot guarantee absolute security. We encourage you to use a strong, unique password and to enable two-factor authentication when available.
 
-If you believe your account has been compromised, contact us immediately at support@zindalearn.com.`,
+If you believe your account has been compromised, contact us immediately at jobzinda@gmail.com.`,
   },
   {
     id: 'childrens-privacy',
@@ -105,9 +105,9 @@ Your continued use of Zinda Learn after the effective date constitutes acceptanc
     title: '10. Contact Us',
     content: `If you have questions, concerns, or requests regarding this Privacy Policy or your personal data, please contact us:
 
-**Email:** support@zindalearn.com
-**Phone:** +91 85906 98873
-**Address:** Tech Park, Palakkad, Kerala, India — 678001
+**Email:** jobzinda@gmail.com
+**Phone:** +91 98475 61998
+**Address:** Mannarkkad, Kerala, India
 
 We aim to respond to all privacy-related inquiries within 5 business days.`,
   },

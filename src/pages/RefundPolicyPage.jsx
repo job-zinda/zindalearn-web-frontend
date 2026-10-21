@@ -23,7 +23,7 @@ const STEPS = [
   {
     step: '01',
     title: 'Submit a request',
-    desc: 'Email support@zindalearn.com with your registered email, order ID, and reason for the refund.',
+    desc: 'Email jobzinda@gmail.com with your registered email, order ID, and reason for the refund.',
   },
   {
     step: '02',
@@ -174,11 +174,11 @@ const RefundPolicyPage = () => (
         <div>
           <h3 className="text-base font-bold text-white mb-1.5">Have a refund request?</h3>
           <p className="text-surface-400 text-sm leading-relaxed max-w-sm">
-            Email us at support@zindalearn.com with your registered email address and order ID.
+            Email us at jobzinda@gmail.com with your registered email address and order ID.
           </p>
         </div>
         <a
-          href="mailto:support@zindalearn.com"
+          href="mailto:jobzinda@gmail.com"
           className="inline-flex items-center gap-2 px-5 py-2.5 bg-primary-600 text-white text-sm font-semibold rounded-xl hover:bg-primary-700 transition-colors flex-shrink-0"
         >
           <Mail size={15} /> Email Support

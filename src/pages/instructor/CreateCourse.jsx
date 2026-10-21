@@ -77,7 +77,7 @@ const CreateCourse = () => {
         discountPrice: Number(formData.discountPrice || 0),
         category: formData.category.toLowerCase()
       });
-      toast.success('Course created successfully!');
+      toast.success('Course saved as a draft. Add content and publish it from Manage Courses.');
       navigate('/admin/courses');
     } catch (error) {
       toast.error(error.response?.data?.message || 'Failed to create course');

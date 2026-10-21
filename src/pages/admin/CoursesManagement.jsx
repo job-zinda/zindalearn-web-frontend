@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import {
   BookOpen, CheckCircle, Clock, Users, Search,
   Eye, Trash2, Ban, Star, Lock, Unlock
 } from 'lucide-react';
 import {
-  getAllCourses, updateCourseStatus, deleteCourse,
+  getAllCourses, approveCourse, updateCourseStatus, deleteCourse,
   getDashboardStats, blockCourse, unblockCourse
 } from '../../services/adminService';
 import DataTable from '../../components/admin/shared/DataTable';
@@ -28,6 +29,8 @@ const CoursesManagement = () => {
   const [selectedCourse, setSelectedCourse] = useState(null);
   const [blockReason, setBlockReason] = useState('');
   const [submittingBlock, setSubmittingBlock] = useState(false);
+  const [publishCourse, setPublishCourse] = useState(null);
+  const [publishing, setPublishing] = useState(false);
 
   const fetchCourses = async () => {
     try {
@@ -60,6 +63,23 @@ const CoursesManagement = () => {
       toast.success(`Course ${status} successfully`);
       fetchCourses();
     } catch { toast.error('Failed to update status'); }
+  };
+
+  const handlePublish = async (e) => {
+    e.preventDefault();
+    if (publishing || !publishCourse) return;
+    try {
+      setPublishing(true);
+      await approveCourse(publishCourse._id);
+      toast.success('Course published successfully');
+      setPublishCourse(null);
+      fetchCourses();
+      fetchStats();
+    } catch (error) {
+      toast.error(error.response?.data?.message || 'Failed to publish course');
+    } finally {
+      setPublishing(false);
+    }
   };
 
   const handleDeleteCourse = async (id) => {
@@ -166,16 +186,19 @@ const CoursesManagement = () => {
       header: 'Actions',
       className: 'text-right',
       cell: (course) => (
-        <div className="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+        <div className="flex items-center justify-end gap-2">
+          {['draft', 'pending', 'declined'].includes(course.status) && (
+            <button
+              onClick={() => setPublishCourse(course)}
+              disabled={course.isBlocked}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold text-emerald-400 bg-emerald-500/10 hover:bg-emerald-500/20 disabled:opacity-40 disabled:cursor-not-allowed"
+              title={course.isBlocked ? 'Unblock this course before publishing' : 'Publish course'}
+            >
+              <CheckCircle className="w-3.5 h-3.5" />
+              Publish
+            </button>
+          )}
           {course.status === 'pending' && (
-            <>
-              <button
-                onClick={() => handleStatusUpdate(course._id, 'published')}
-                className="p-1.5 hover:bg-emerald-500/10 rounded-lg text-emerald-400 transition-colors"
-                title="Approve"
-              >
-                <CheckCircle className="w-3.5 h-3.5" />
-              </button>
               <button
                 onClick={() => handleStatusUpdate(course._id, 'declined')}
                 className="p-1.5 hover:bg-red-500/10 rounded-lg text-red-400 transition-colors"
@@ -183,8 +206,15 @@ const CoursesManagement = () => {
               >
                 <Ban className="w-3.5 h-3.5" />
               </button>
-            </>
           )}
+          <Link
+            to={`/admin/courses/${course._id}`}
+            className="p-1.5 hover:bg-slate-700 rounded-lg text-indigo-400 transition-colors"
+            title="Manage course"
+            aria-label={`Manage ${course.title}`}
+          >
+            <Eye className="w-3.5 h-3.5" />
+          </Link>
           <button
             onClick={() => handleBlockToggle(course)}
             className={`p-1.5 hover:bg-slate-700 rounded-lg transition-colors ${course.isBlocked ? 'text-emerald-400' : 'text-red-400'}`}
@@ -206,7 +236,7 @@ const CoursesManagement = () => {
 
   return (
     <div className="space-y-6 animate-fade-in">
-      <PageHeader title="Courses" subtitle="Monitor course performance, approve submissions, and manage content." />
+      <PageHeader title="Courses" subtitle="New courses are saved as drafts. Add your content, then publish when ready." />
 
       {/* Stats */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -243,6 +273,16 @@ const CoursesManagement = () => {
 
       {/* Table */}
       <DataTable columns={columns} data={courses} loading={loading} emptyMessage="No courses found" />
+
+      <ConfirmModal
+        isOpen={!!publishCourse}
+        onClose={() => { if (!publishing) setPublishCourse(null); }}
+        onConfirm={handlePublish}
+        title="Publish Course"
+        description={`Publish "${publishCourse?.title}"? It will appear in the public course catalog and be available for enrollment.`}
+        confirmLabel="Publish Course"
+        loading={publishing}
+      />
 
       {/* Pagination */}
       {totalCourses > 10 && (

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { getInstructorCourses, submitCourse } from '../../services/instructorService';
+import { approveCourse } from '../../services/adminService';
 import { getCourseById, updateCourse, addSection as addSectionAPI, updateSection as updateSectionAPI, deleteSection as deleteSectionAPI, addLessonToSection, updateLessonInSection, deleteLessonFromSection, replyOrEditQA, uploadFile } from '../../services/courseService';
 import { toast } from 'react-hot-toast';
 import { useAuth } from '../../context/AuthContext';
@@ -1345,6 +1346,7 @@ const CouponsTab = () => {
 // ── Course Detail Main ────────────────────────────────────────────────────────
 const CourseDetail = () => {
   const { user } = useAuth();
+  const isAdmin = user?.role === 'admin';
   const navigate = useNavigate();
   const { id } = useParams();
   const [activeTab, setActiveTab] = useState('Content');
@@ -1372,20 +1374,27 @@ const CourseDetail = () => {
     } catch (error) {
       console.error('[COURSE_DETAIL] Fetch error:', error);
       toast.error('Failed to fetch course details');
-      navigate('/instructor/my-courses');
+      navigate(isAdmin ? '/admin/courses' : '/instructor/my-courses');
     } finally {
       setLoading(false);
     }
   };
 
   const handleSubmitForReview = async () => {
+    if (submitting) return;
+    if (isAdmin && !window.confirm(`Publish "${course.title}"? It will be visible in the public course catalog and available for enrollment.`)) return;
     try {
       setSubmitting(true);
-      await submitCourse(id);
-      toast.success('Course submitted for admin review!');
-      fetchCourse();
+      if (isAdmin) {
+        await approveCourse(id);
+        toast.success('Course published successfully!');
+      } else {
+        await submitCourse(id);
+        toast.success('Course submitted for admin review!');
+      }
+      await fetchCourse();
     } catch (error) {
-      toast.error(error.response?.data?.message || 'Failed to submit course');
+      toast.error(error.response?.data?.message || (isAdmin ? 'Failed to publish course' : 'Failed to submit course'));
     } finally {
       setSubmitting(false);
     }
@@ -1407,7 +1416,7 @@ const CourseDetail = () => {
     <div className="animate-fade-in pb-20">
       {/* Breadcrumb */}
       <div className="flex items-center gap-2 text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-8">
-        <Link to="/instructor/my-courses" className="hover:text-purple-600 transition-colors">Courses</Link>
+        <Link to={isAdmin ? '/admin/courses' : '/instructor/my-courses'} className="hover:text-purple-600 transition-colors">Courses</Link>
         <ChevronRight className="w-3 h-3" />
         <span className="text-slate-600">Management</span>
       </div>
@@ -1440,25 +1449,25 @@ const CourseDetail = () => {
             ))}
           </div>
 
-          {course.status === 'draft' || course.status === 'declined' ? (
+          {['draft', 'declined'].includes(course.status) || (isAdmin && course.status === 'pending') ? (
             <button
               onClick={handleSubmitForReview}
-              disabled={submitting}
+              disabled={submitting || (isAdmin && course.isBlocked)}
               className="flex items-center gap-2.5 px-8 py-3.5 bg-purple-600 hover:bg-purple-700 text-white font-bold rounded-2xl shadow-xl shadow-purple-500/20 transition-all active:scale-95 group"
             >
               {submitting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />}
-              Submit for Review
+              {isAdmin ? 'Publish Course' : 'Submit for Review'}
             </button>
           ) : (
             <button className="flex items-center gap-2.5 px-8 py-3.5 bg-slate-100 text-slate-400 font-bold rounded-2xl border border-slate-200 cursor-not-allowed">
               <CheckCircle2 className="w-4 h-4" />
-              In Review
+              {course.status === 'published' ? 'Published' : 'In Review'}
             </button>
           )}
 
           {(user?.role === 'admin' || (course.instructor?._id || course.instructor) === (user?.id || user?._id)) && (
             <button
-              onClick={() => navigate(`/instructor/edit-course/${id}`)}
+              onClick={() => navigate(`${isAdmin ? '/admin' : '/instructor'}/edit-course/${id}`)}
               className="flex items-center gap-2.5 px-6 py-3.5 bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 font-bold rounded-2xl transition-all active:scale-95 group"
             >
               <Edit2 className="w-4 h-4 group-hover:rotate-12 transition-transform" />

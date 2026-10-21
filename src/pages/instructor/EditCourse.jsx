@@ -15,6 +15,7 @@ import { toast } from 'react-hot-toast';
 import { useAuth } from '../../context/AuthContext';
 import PromoVideoUpload from '../../components/instructor/PromoVideoUpload';
 import ThumbnailUpload from '../../components/instructor/ThumbnailUpload';
+import ReferralCommissionInput from '../../components/instructor/ReferralCommissionInput';
 
 const EditCourse = () => {
   const { id } = useParams();
@@ -35,6 +36,7 @@ const EditCourse = () => {
     currency: 'INR',
     isFree: false,
     discountPrice: 0,
+    referralCommissionPercent: 0,
     previewVideo: '',
     previewVideoPublicId: ''
   });
@@ -70,6 +72,7 @@ const EditCourse = () => {
         currency: course.currency || 'INR',
         isFree: course.isFree || false,
         discountPrice: course.discountPrice || 0,
+        referralCommissionPercent: course.referralCommissionPercent || 0,
         previewVideo: course.previewVideo || '',
         previewVideoPublicId: course.previewVideoPublicId || ''
       });
@@ -86,6 +89,9 @@ const EditCourse = () => {
     if (!formData.title.trim()) newErrors.title = 'Title is required';
     if (!formData.description.trim()) newErrors.description = 'Description is required';
     if (!formData.category) newErrors.category = 'Category is required';
+    if (!Number.isFinite(Number(formData.referralCommissionPercent)) || Number(formData.referralCommissionPercent) < 0 || Number(formData.referralCommissionPercent) > 100) {
+      newErrors.referralCommissionPercent = 'Enter a percentage between 0 and 100';
+    }
     
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -111,8 +117,10 @@ const EditCourse = () => {
 
     try {
       setSaving(true);
+      const { referralCommissionPercent, ...courseData } = formData;
       await updateCourse(id, {
-        ...formData,
+        ...courseData,
+        ...(user.role === 'admin' ? { referralCommissionPercent: Number(referralCommissionPercent) } : {}),
         price: Number(formData.price),
         discountPrice: Number(formData.discountPrice || 0),
         category: formData.category.toLowerCase()
@@ -363,6 +371,14 @@ const EditCourse = () => {
               />
             </div>
 
+            {user?.role === 'admin' && (
+              <ReferralCommissionInput
+                value={formData.referralCommissionPercent}
+                onChange={handleChange}
+                price={Number(formData.discountPrice) > 0 && Number(formData.discountPrice) < Number(formData.price) ? Number(formData.discountPrice) : Number(formData.price)}
+                error={errors.referralCommissionPercent}
+              />
+            )}
             <div className="flex flex-col justify-end pb-1">
               <label className={`flex items-center gap-4 border rounded-[18px] px-6 py-4 cursor-pointer transition-colors ${
                 isAdmin 

@@ -71,7 +71,7 @@ const CourseDetailsPage = () => {
     setShowPurchaseModal(true);
   };
 
-  const initiatePayment = async () => {
+  const initiatePayment = async (referralCode = '') => {
     if (enrolling) return;
     setEnrolling(true);
     
@@ -97,7 +97,7 @@ const CourseDetailsPage = () => {
 
       // 3. Create Order
       const { createOrder } = await import('../../services/paymentService');
-      const orderData = await createOrder(course._id);
+      const orderData = await createOrder(course._id, referralCode);
 
       if (!orderData.success) {
         throw new Error(orderData.message || 'Failed to create order');
@@ -125,6 +125,9 @@ const CourseDetailsPage = () => {
             });
 
             if (verifyRes.success) {
+              if (['pending', 'processing'].includes(verifyRes.referralCreditStatus)) {
+                toast('Your course is enrolled. The referral commission is queued for retry.');
+              }
               toast.success('Payment Successful! Welcome to the course.', { id: loadingToast });
               setShowPurchaseModal(false);
               setTimeout(() => navigate('/student/my-learning'), 1500);

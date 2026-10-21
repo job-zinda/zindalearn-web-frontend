@@ -8,6 +8,7 @@ import { CallProvider } from './features/calls/context/CallContext';
 import CallModal from './features/calls/components/CallModal';
 import IncomingCallModal from './features/calls/components/IncomingCallModal';
 import Loader from './components/Loader';
+import ReferralCapture from './components/course/ReferralCapture';
 
 // Layouts
 const StudentLayout = lazy(() => import('./layouts/StudentLayout'));
@@ -206,6 +207,7 @@ function App() {
       <NotificationProvider>
         <CallProvider>
           <Router>
+            <ReferralCapture />
             <AppContent />
           </Router>
         </CallProvider>

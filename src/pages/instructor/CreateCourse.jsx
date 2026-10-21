@@ -13,6 +13,7 @@ import { toast } from 'react-hot-toast';
 import { useAuth } from '../../context/AuthContext';
 import ThumbnailUpload from '../../components/instructor/ThumbnailUpload';
 import PromoVideoUpload from '../../components/instructor/PromoVideoUpload';
+import ReferralCommissionInput from '../../components/instructor/ReferralCommissionInput';
 
 const CreateCourse = () => {
   const { user } = useAuth();
@@ -31,6 +32,7 @@ const CreateCourse = () => {
     currency: 'INR',
     isFree: false,
     discountPrice: 0,
+    referralCommissionPercent: 0,
     previewVideo: '',
     previewVideoPublicId: ''
   });
@@ -41,6 +43,9 @@ const CreateCourse = () => {
     if (!formData.title.trim()) newErrors.title = 'Title is required';
     if (!formData.description.trim()) newErrors.description = 'Description is required';
     if (!formData.category) newErrors.category = 'Category is required';
+    if (!Number.isFinite(Number(formData.referralCommissionPercent)) || Number(formData.referralCommissionPercent) < 0 || Number(formData.referralCommissionPercent) > 100) {
+      newErrors.referralCommissionPercent = 'Enter a percentage between 0 and 100';
+    }
     
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -75,6 +80,7 @@ const CreateCourse = () => {
         ...formData,
         price: Number(formData.price),
         discountPrice: Number(formData.discountPrice || 0),
+        referralCommissionPercent: Number(formData.referralCommissionPercent),
         category: formData.category.toLowerCase()
       });
       if (!result.course?._id) {
@@ -312,6 +318,14 @@ const CreateCourse = () => {
               />
             </div>
 
+            {user?.role === 'admin' && (
+              <ReferralCommissionInput
+                value={formData.referralCommissionPercent}
+                onChange={handleChange}
+                price={Number(formData.discountPrice) > 0 && Number(formData.discountPrice) < Number(formData.price) ? Number(formData.discountPrice) : Number(formData.price)}
+                error={errors.referralCommissionPercent}
+              />
+            )}
             <div className="flex flex-col justify-end pb-1">
               <label className={`flex items-center gap-4 border rounded-[18px] px-6 py-4 cursor-pointer transition-colors ${
                 isAdmin 

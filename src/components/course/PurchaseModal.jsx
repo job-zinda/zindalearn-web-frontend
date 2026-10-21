@@ -4,9 +4,27 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { X, ShieldCheck, CheckCircle2, Loader2 } from 'lucide-react';
 import { formatCurrency } from '../../utils/currencyFormatter';
 import toast from 'react-hot-toast';
+import { getReferralCode, saveReferralCode } from '../../utils/referral';
+import { verifyReferral } from '../../services/paymentService';
 
 const PurchaseModal = ({ isOpen, onClose, course, onProceed, loading }) => {
   const [agreed, setAgreed] = useState(false);
+  const [referralCode, setReferralCode] = useState('');
+  const [verifiedCode, setVerifiedCode] = useState('');
+  const [checkingReferral, setCheckingReferral] = useState(false);
+  const [referralError, setReferralError] = useState('');
+  useEffect(() => {
+    if (isOpen && course?._id) {
+      try {
+        setReferralCode(getReferralCode(course._id));
+        setVerifiedCode('');
+        setReferralError('');
+      } catch (error) {
+        console.error('Unable to restore referral:', error);
+        toast.error('Unable to restore referral ID. Please enter it again.');
+      }
+    }
+  }, [isOpen, course?._id]);
 
   // Reset agreed state when modal closes
   useEffect(() => {
@@ -35,12 +53,49 @@ const PurchaseModal = ({ isOpen, onClose, course, onProceed, loading }) => {
     if (!loading) onClose();
   };
 
+  const handleVerifyReferral = async () => {
+    const code = referralCode.trim();
+    if (!code) return;
+    setCheckingReferral(true);
+    setReferralError('');
+    try {
+      const result = await verifyReferral(code);
+      if (!result.valid) throw new Error('Invalid Jobzinda referral ID');
+      setVerifiedCode(code);
+    } catch (error) {
+      setVerifiedCode('');
+      const message = error.response?.data?.message || error.message || 'Referral verification failed';
+      setReferralError(message);
+      toast.error(message);
+    } finally {
+      setCheckingReferral(false);
+    }
+  };
+  const handleCopyReferralLink = async () => {
+    try {
+      const url = new URL(`/courses/${course._id}`, window.location.origin);
+      url.searchParams.set('ref', referralCode.trim());
+      await navigator.clipboard.writeText(url.toString());
+      toast.success('Course referral link copied');
+    } catch (error) {
+      console.error('Unable to copy referral link:', error);
+      toast.error('Unable to copy referral link');
+    }
+  };
+
   const handleProceed = () => {
     if (!agreed) {
       toast.error('Please accept Terms & Conditions');
       return;
     }
-    onProceed();
+    try {
+      saveReferralCode(course._id, referralCode);
+    } catch (error) {
+      console.error('Unable to save referral:', error);
+      toast.error('Unable to save your referral ID. Please retry.');
+      return;
+    }
+    onProceed(totalAmount > 0 ? referralCode.trim() : '');
   };
 
   const modalContent = (
@@ -154,6 +209,35 @@ const PurchaseModal = ({ isOpen, onClose, course, onProceed, loading }) => {
                 </p>
               </div>
 
+              {totalAmount > 0 && (
+                <div className="mb-6">
+                  <label htmlFor={`referral-${course?._id}`} className="block text-sm font-bold text-zinc-700 mb-2">
+                    Jobzinda Referral ID (Optional)
+                  </label>
+                  <div className="flex gap-2">
+                    <input
+                      id={`referral-${course?._id}`}
+                      value={referralCode}
+                      maxLength={100}
+                      disabled={loading || checkingReferral}
+                      onChange={(event) => { setReferralCode(event.target.value); setVerifiedCode(''); setReferralError(''); }}
+                      placeholder="Enter Jobzinda referral ID"
+                      className="min-w-0 flex-1 px-3 py-3 border border-zinc-300 rounded-xl text-sm text-zinc-900"
+                    />
+                    <button type="button" onClick={handleVerifyReferral} disabled={loading || checkingReferral || !referralCode.trim()} className="px-4 rounded-xl bg-zinc-100 text-zinc-700 font-bold text-sm disabled:opacity-50">
+                      {checkingReferral ? 'Checking...' : 'Verify'}
+                    </button>
+                  </div>
+                  {verifiedCode === referralCode.trim() && verifiedCode && (
+                    <div className="mt-2 flex flex-wrap items-center gap-3 text-xs">
+                      <span className="text-emerald-700">Jobzinda referral ID verified.</span>
+                      <button type="button" onClick={handleCopyReferralLink} className="font-bold text-primary-600 underline">Copy course referral link</button>
+                    </div>
+                  )}
+                  {referralError && <p role="alert" className="mt-2 text-xs text-red-600">{referralError}</p>}
+                  <p className="mt-2 text-xs text-zinc-500">Commission goes to the referral owner, without increasing your course price.</p>
+                </div>
+              )}
               {/* Terms Checkbox */}
               <div className="space-y-6">
                 <label className="flex items-start gap-3 cursor-pointer group">
@@ -187,7 +271,7 @@ const PurchaseModal = ({ isOpen, onClose, course, onProceed, loading }) => {
                   <button
                     type="button"
                     onClick={handleProceed}
-                    disabled={loading || !agreed}
+                    disabled={loading || checkingReferral || !agreed}
                     className={`flex-1 py-4 flex items-center justify-center gap-2 font-black text-sm rounded-2xl shadow-lg transition-all ${
                       agreed && !loading
                         ? 'bg-primary-600 text-white shadow-primary-500/30 hover:bg-primary-700 hover:scale-[1.02] active:scale-[0.98]' 

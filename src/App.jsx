@@ -18,8 +18,7 @@ const AdminLayout = lazy(() => import('./layouts/AdminLayout'));
 const Home = lazy(() => import('./pages/Home'));
 const StudentLogin = lazy(() => import('./pages/StudentLogin'));
 const StudentRegister = lazy(() => import('./pages/auth/StudentRegister'));
-const InstructorLogin = lazy(() => import('./pages/auth/InstructorLogin'));
-const InstructorSignup = lazy(() => import('./pages/auth/InstructorSignup'));
+const InstructorComingSoon = lazy(() => import('./pages/auth/InstructorComingSoon'));
 const AdminLogin = lazy(() => import('./pages/auth/AdminLogin'));
 const CoursesPage = lazy(() => import('./pages/CoursesPage'));
 const AboutPage = lazy(() => import('./pages/AboutPage'));
@@ -114,8 +113,8 @@ function AppContent() {
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<StudentLogin />} />
             <Route path="/register" element={<StudentRegister />} />
-            <Route path="/instructor/login" element={<InstructorLogin />} />
-            <Route path="/instructor/signup" element={<InstructorSignup />} />
+            <Route path="/instructor/login" element={<InstructorComingSoon />} />
+            <Route path="/instructor/signup" element={<InstructorComingSoon />} />
             <Route path="/admin/login" element={<AdminLogin />} />
             <Route path="/courses" element={<CoursesPage />} />
             <Route path="/about" element={<AboutPage />} />

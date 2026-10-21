@@ -71,7 +71,7 @@ const Home = () => {
                 Access 500+ premium courses from industry experts. Learn at your own pace with interactive content, live classes, and personalized mentoring.
               </p>
               <div className="flex flex-wrap items-center justify-center gap-6">
-                <Link to="/register">
+                <Link to="/courses">
                   <Button className="h-16 px-10 !text-white rounded-2xl shadow-2xl hover:shadow-[0_25px_50px_rgba(0,0,0,0.3)] hover:scale-105 active:scale-95 transition-all duration-300 border-none font-bold text-lg tracking-tight">
                     Start Learning Free
                     <ArrowRight className="w-5 h-5 ml-2" />

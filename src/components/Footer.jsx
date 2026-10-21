@@ -16,10 +16,10 @@ const Footer = () => {
             Join thousands of learners and transform your career with world-class courses.
           </p>
           <Link
-            to="/register"
+            to="/courses"
             className="inline-flex items-center gap-2 px-8 py-4 bg-white text-primary-600 font-bold rounded-xl hover:bg-surface-50 transition-all duration-300 hover:-translate-y-1 shadow-lg"
           >
-            Get Started for Free
+            Browse Courses
           </Link>
         </div>
       </div>
@@ -53,6 +53,9 @@ const Footer = () => {
               </li>
               <li>
                 <Link to="/courses" className="text-sm text-surface-400 hover:text-primary-400 transition-colors">Courses</Link>
+              </li>
+              <li>
+                <Link to="/instructor/login" className="text-sm text-surface-400 hover:text-primary-400 transition-colors">Teach on Zinda Learn · Available soon</Link>
               </li>
             </ul>
           </div>

@@ -113,11 +113,17 @@ const Navbar = ({ showBackground = false }) => {
                 <Link to="/login">
                   <Button variant="ghost" size="sm" className={!isScrolled ? "text-white hover:bg-white/20" : ""}>Sign In</Button>
                 </Link>
-                <Link to="/register">
-                  <Button size="sm" className={!isScrolled ? "bg-white text-primary-600 hover:bg-surface-50" : ""}>Get Started</Button>
+                <Link to="/courses">
+                  <Button size="sm" className={!isScrolled ? "bg-white text-primary-600 hover:bg-surface-50" : ""}>Browse Courses</Button>
                 </Link>
               </>
             )}
+            <Link
+              to="/instructor/login"
+              className={`text-sm font-semibold transition-colors ${isScrolled ? 'text-primary-600 hover:text-primary-700' : 'text-white hover:text-white/80'}`}
+            >
+              Teach · Available soon
+            </Link>
           </div>
 
           {/* Mobile Menu Toggle */}
@@ -152,6 +158,13 @@ const Navbar = ({ showBackground = false }) => {
               >
                 About
               </button>
+              <Link
+                to="/instructor/login"
+                className="block px-4 py-3 rounded-xl font-semibold text-surface-700 hover:bg-primary-50 hover:text-primary-600"
+                onClick={() => setIsOpen(false)}
+              >
+                Teach on Zinda Learn · Available soon
+              </Link>
             </div>
             <hr className="my-4 border-surface-100" />
             {isAuthenticated ? (
@@ -166,8 +179,8 @@ const Navbar = ({ showBackground = false }) => {
                 <Link to="/login" onClick={() => setIsOpen(false)}>
                   <Button fullWidth variant="secondary">Sign In</Button>
                 </Link>
-                <Link to="/register" onClick={() => setIsOpen(false)}>
-                  <Button fullWidth>Get Started</Button>
+                <Link to="/courses" onClick={() => setIsOpen(false)}>
+                  <Button fullWidth>Browse Courses</Button>
                 </Link>
               </div>
             )}
